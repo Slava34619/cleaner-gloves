@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>Перчатки двойной латексный облив - ТехСнабПром</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+
+    <style>
+        @media (max-width: 640px) {
+            #cart-modal .max-w-4xl {
+                max-width: 100vw;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+        }
+        
+        .product-card {
+            transition: all 0.3s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .notification {
+            animation: slideIn 0.3s forwards, fadeOut 0.5s forwards 2.5s;
+        }
+        @keyframes slideIn {
+            from { right: -300px; }
+            to { right: 20px; }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        input[type="file"]::file-selector-button {
+            background-color: #2563eb;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            border: none;
+            cursor: pointer;
+        }
+        input[type="file"]::file-selector-button:hover {
+            background-color: #1d4ed8;
+        }
+        .category-bg {
+            background-size: contain;
+            background-position: center;
+            position: relative;
+            background-repeat: no-repeat;
+            background-color: white;
+        }
+        .category-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.2) 100%);
+            z-index: 1;
+        }
+        
+        /* Выделение НДС */
+        .vat-info {
+            color: #666;
+            font-size: 14px;
+            margin-top: -8px;
+            margin-bottom: 16px;
+        }
+
+        .product-card {
+            display: flex;
+            flex-direction: column;
+            min-height: 480px;
+            height: 100%;
+        }
+
+        .product-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .price-section {
+            margin-top: auto;
+            padding-top: 1rem;
+        }
+
+        /* Для мобильных устройств */
+        @media (max-width: 768px) {
+            .product-card {
+                min-height: 420px;
+            }
+            
+            .product-card img {
+                height: 120px;
+                object-fit: contain;
+            }
+            
+            #popular-products {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+            
+            .product-card {
+                padding: 1rem;
+            }
+            
+            .product-card h3 {
+                font-size: 14px;
+                line-height: 1.3;
+            }
+            
+            .product-card p {
+                font-size: 12px;
+                line-height: 1.4;
+            }
+            
+            .product-card .text-xl {
+                font-size: 18px;
+            }
+        }
+
+        /* Исправления для Safari */
+        @supports (-webkit-touch-callout: none) {
+            .category-bg {
+                background-attachment: scroll !important;
+            }
+            
+            .fixed {
+                position: fixed;
+                -webkit-backface-visibility: hidden;
+            }
+        }
+
+        /* Улучшение производительности на iOS */
+        button, a {
+            -webkit-tap-highlight-color: transparent;
+            cursor: pointer;
+        }
+
+        /* Исправление для модального окна на iOS */
+        #cart-modal {
+            -webkit-overflow-scrolling: touch;
+        }
+    </style>
+    
+</head>
+<body class="bg-gray-50">
+
+<!-- Notification -->
+<div id="notification" class="notification hidden fixed top-20 right-5 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 flex items-center">
+    <div id="notification-text"></div>
+</div>
+
+<!-- Header -->
+<header class="bg-gray-900 text-white py-4 shadow-md">
+    <div class="container mx-auto px-4 flex justify-between items-center">
+        <a href="index.html" class="text-2xl font-bold">ТехСнабПром</a>
+        <nav class="hidden md:flex space-x-6">
+            <a href="index.html#categories" class="hover:text-blue-300">Каталог</a>
+            <a href="index.html#about" class="hover:text-blue-300">О нас</a>
+            <a href="index.html#contacts" class="hover:text-blue-300">Контакты</a>
+        </nav>
+        
+        <!-- Cart Icon -->
+        <div id="cart-icon" class="relative cursor-pointer group">
+            <i class="fas fa-shopping-cart text-xl"></i>
+            <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 px-2 min-w-fit flex items-center justify-center hidden">0</span>
+        </div>
+    </div>
+</header>
+
+<!-- Main -->
+<main class="py-12">
+    <div class="container mx-auto px-4">
+        <h1 class="text-3xl font-bold mb-8 text-center">Перчатки двойной латексный облив</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+
+            <!-- Товар 1 -->
+            <div class="bg-white rounded-lg shadow-md p-4 flex flex-col product-card">
+                <div class="product-content">
+                    <img src="images/двойной облив ¾ красные.png" alt="Перчатки двойной облив ¾" class="mb-4 rounded h-48 object-contain">
+                    <h3 class="text-lg font-semibold mb-2">Перчатки двойной облив ¾</h3>
+                    <p class="text-gray-600 text-sm mb-4 flex-grow">Прочные перчатки с защитным покрытием для различных работ.</p>
+                    
+                    <div class="price-section">
+                        <span class="text-xl font-bold block mb-1">59 руб./пара</span>
+                        <div class="vat-info text-gray-500 text-xs mb-3">Включая НДС 20%</div>
+                        <button class="add-to-cart bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full" 
+                                data-id="1" data-name="Перчатки двойной облив ¾" data-price="59" 
+                                data-image="images/двойной облив ¾ красные.png">
+                            В корзину
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Товар 2 -->
+            <div class="bg-white rounded-lg shadow-md p-4 flex flex-col product-card">
+                <div class="product-content">
+                    <img src="images/СВС Двойной латексный облив зеленые.png" alt="Перчатки двойной облив зеленые" class="mb-4 rounded h-48 object-contain">
+                    <h3 class="text-lg font-semibold mb-2">Перчатки двойной латексный облив зеленые</h3>
+                    <p class="text-gray-600 text-sm mb-4 flex-grow">Прочные перчатки с защитным покрытием для различных работ. Более эффективная и долговечная альтернатива ПВХ перчаткам. Превосходное решение при ограниченном бюджете.</p>
+                    
+                    <div class="price-section">
+                        <span class="text-xl font-bold block mb-1">39 руб./пара</span>
+                        <div class="vat-info text-gray-500 text-xs mb-3">Включая НДС 20%</div>
+                        <button class="add-to-cart bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full" 
+                                data-id="2" data-name="Перчатки двойной латексный облив зеленые" data-price="39" 
+                                data-image="images/СВС Двойной латексный облив зеленые.png">
+                            В корзину
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Кнопка "назад в каталог" -->
+        <div class="text-center mt-12">
+            <a href="index.html#categories" class="text-blue-600 hover:underline text-sm"><i class="fas fa-arrow-left mr-2"></i>Назад к каталогу</a>
+        </div>
+    </div>
+</main>
+
+<!-- Cart Modal -->
+<div id="cart-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+    <div class="flex items-center justify-center min-h-screen">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl mx-4 h-full max-h-screen flex flex-col">
+            <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+                <h3 class="text-2xl font-bold">Ваш заказ</h3>
+                <button id="close-cart" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+          
+            <div class="flex-grow px-6 overflow-y-auto" style="min-height:0;">
+                <div id="cart-items" class="divide-y divide-gray-200">
+                    <p class="py-8 text-center text-gray-500">Ваша корзина пуста</p>
+                </div>
+            </div>
+            
+            <div class="p-6 border-t border-gray-200">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <p class="font-semibold">Итого:</p>
+                        <p id="cart-grand-total" class="text-2xl font-bold">0 руб.</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button id="clear-cart" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition">Очистить</button>
+                        <button id="checkout-btn" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed" disabled>Оформить заказ</button>
+                    </div>
+                </div>
+                
+                <!-- Checkout Form -->
+                <div id="checkout-form" class="hidden">
+                    <h4 class="text-lg font-semibold mb-4">Контактные данные</h4>
+                    <form id="order-form" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Имя*</label>
+                                <input type="text" id="name" name="name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email*</label>
+                                <input type="email" id="email" name="email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Телефон*</label>
+                                <input type="tel" id="phone" name="phone" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label for="comment" class="block text-sm font-medium text-gray-700 mb-1">Комментарий</label>
+                                <textarea id="comment" name="comment" rows="2" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="file" class="block text-sm font-medium text-gray-700 mb-1">Прикрепить карточку предприятия</label>
+                            <input type="file" id="file" name="file" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                            <p class="mt-1 text-xs text-gray-500">Поддерживаются файлы PDF, DOC, JPG, PNG и другие (до 10 МБ)</p>
+                        </div>
+                        
+                        <div class="mt-6">
+                            <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-lg font-medium transition duration-300 flex items-center justify-center">
+                                <i class="fas fa-paper-plane mr-2"></i> Отправить заказ
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-gray-900 text-white py-6 mt-16">
+    <div class="container mx-auto px-4 text-center text-gray-400 text-sm">
+        © 2025 ТехСнабПром. Все права защищены.
+    </div>
+</footer>
+
+<script>
+    // Обработка ошибок загрузки изображений
+    document.querySelectorAll('img').forEach(img => {
+        img.addEventListener('error', function() {
+            this.style.display = 'none';
+        });
+    });
+
+    // Cart functionality
+    let cart = [];
+    const cartIcon = document.getElementById('cart-icon');
+    const cartCount = document.getElementById('cart-count');
+    const cartModal = document.getElementById('cart-modal');
+    const closeCart = document.getElementById('close-cart');
+    const cartItems = document.getElementById('cart-items');
+    const cartGrandTotal = document.getElementById('cart-grand-total');
+    const clearCartBtn = document.getElementById('clear-cart');
+    const checkoutBtn = document.getElementById('checkout-btn');
+    const checkoutForm = document.getElementById('checkout-form');
+    const orderForm = document.getElementById('order-form');
+    const notification = document.getElementById('notification');
+    const notificationText = document.getElementById('notification-text');
+
+    // Add to cart buttons
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+        button.addEventListener('click', function() {
+            const id = this.dataset.id;
+            const name = this.dataset.name;
+            const price = parseFloat(this.dataset.price);
+            const image = this.dataset.image;
+            
+            // Check if product already in cart
+            const existingItem = cart.find(item => item.id === id);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id,
+                    name,
+                    price,
+                    image,
+                    quantity: 1
+                });
+            }
+            
+            updateCart();
+            showNotification(`Товар "${name}" добавлен в корзину`);
+        });
+    });
+
+    // Update cart UI
+    function updateCart() {
+        // Update cart count
+        const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+        cartCount.textContent = totalItems;
+        totalItems > 0 ? cartCount.classList.remove('hidden') : cartCount.classList.add('hidden');
+        
+        // Update cart items
+        if (cart.length === 0) {
+            cartItems.innerHTML = '<p class="py-8 text-center text-gray-500">Ваша корзина пуста</p>';
+            checkoutBtn.disabled = true;
+        } else {
+            cartItems.innerHTML = cart.map(item => `
+                <div class="py-4 flex items-center">
+                    <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded">
+                    <div class="ml-4 flex-grow">
+                        <h4 class="font-medium">${item.name}</h4>
+                        <p class="text-gray-600">${item.price} руб./шт</p>
+                    </div>
+                    <div class="flex items-center">
+                        <button class="decrease-quantity w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center" data-id="${item.id}">-</button>
+                        <span class="mx-2">${item.quantity}</span>
+                        <button class="increase-quantity w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center" data-id="${item.id}">+</button>
+                    </div>
+                    <div class="ml-4">
+                        <span class="font-medium">${(item.price * item.quantity).toFixed(2)} руб.</span>
+                    </div>
+                    <button class="remove-from-cart ml-4 text-red-500 hover:text-red-700" data-id="${item.id}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `).join('');
+            
+            checkoutBtn.disabled = false;
+            
+            // Add event listeners to quantity buttons
+            document.querySelectorAll('.increase-quantity').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.dataset.id;
+                    const item = cart.find(item => item.id === id);
+                    item.quantity += 1;
+                    updateCart();
+                });
+            });
+            
+            document.querySelectorAll('.decrease-quantity').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.dataset.id;
+                    const item = cart.find(item => item.id === id);
+                    if (item.quantity > 1) {
+                        item.quantity -= 1;
+                    } else {
+                        cart = cart.filter(item => item.id !== id);
+                    }
+                    updateCart();
+                });
+            });
+            
+            document.querySelectorAll('.remove-from-cart').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.dataset.id;
+                    cart = cart.filter(item => item.id !== id);
+                    updateCart();
+                    showNotification('Товар удален из корзины');
+                });
+            });
+        }
+        
+        // Update grand total
+        const grandTotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+        cartGrandTotal.textContent = `${grandTotal.toFixed(2)} руб.`;
+    }
+
+    // Show notification
+    function showNotification(message) {
+        notificationText.textContent = message;
+        notification.classList.remove('hidden');
+        
+        setTimeout(() => {
+            notification.classList.add('hidden');
+        }, 3000);
+    }
+
+    // Open cart modal
+    cartIcon.addEventListener('click', function(e) {
+        cartModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    });
+
+    // Close cart modal
+    closeCart.addEventListener('click', function() {
+        cartModal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    });
+
+    // Clear cart
+    clearCartBtn.addEventListener('click', function() {
+        cart = [];
+        updateCart();
+        showNotification('Корзина очищена');
+    });
+
+    // Checkout button
+    checkoutBtn.addEventListener('click', function() {
+        checkoutForm.classList.toggle('hidden');
+    });
+
+    // Order form submission
+    orderForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Here you would normally send the order to your server
+        const formData = new FormData(this);
+        const orderData = {
+            items: cart,
+            customer: {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                comment: formData.get('comment')
+            }
+        };
+        
+        console.log('Order submitted:', orderData);
+        
+        // Show success message
+        showNotification('Заказ успешно отправлен! Мы свяжемся с вами в ближайшее время.');
+        
+        // Reset cart and close modal
+        cart = [];
+        updateCart();
+        checkoutForm.classList.add('hidden');
+        cartModal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+        orderForm.reset();
+    });
+
+    // Initialize cart on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        updateCart();
+    });
+</script>
+</body>
+</html>
