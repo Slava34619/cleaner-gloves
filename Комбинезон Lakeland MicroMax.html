@@ -152,8 +152,8 @@
         }
         /* Для мобильных устройств - 2 товара в ряд */
 @media (max-width: 768px) {
-    .grid {
-        grid-template-columns: repeat(2, 1fr);
+    #products-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
         gap: 1rem;
     }
     
@@ -184,8 +184,8 @@
 
 /* Для очень маленьких экранов */
 @media (max-width: 480px) {
-    .grid {
-        grid-template-columns: repeat(2, 1fr);
+    #products-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
         gap: 0.75rem;
     }
     
@@ -557,4 +557,5 @@
 </body>
 
 </html>
+
 
