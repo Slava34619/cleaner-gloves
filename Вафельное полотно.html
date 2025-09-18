@@ -181,6 +181,8 @@
         height: 120px;
         object-fit: contain;
     }
+    .read-more-btn {
+        font-size: 11px;
 }
 
 /* Для очень маленьких экранов */
@@ -202,6 +204,39 @@
     .product-card img {
         height: 100px;
     }
+    .read-more-btn {
+        font-size: 10px;
+    }
+}
+        /* Ограничение текста описания */
+.product-description {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Ограничиваем до 3 строк */
+    -webkit-box-orient: vertical;
+    line-height: 1.4;
+    max-height: 4.2em; /* 3 строки * 1.4 line-height */
+    transition: max-height 0.3s ease;
+}
+
+.product-description.expanded {
+    -webkit-line-clamp: unset;
+    max-height: none;
+}
+
+.read-more-btn {
+    color: #2563eb;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 4px 0;
+    text-align: left;
+    margin-top: 4px;
+}
+
+.read-more-btn:hover {
+    text-decoration: underline;
 }
     </style>
     
@@ -243,7 +278,10 @@
     <div class="product-content">
         <img src="images/Вафельное полотно.png" alt="Вафельное полотно" class="mb-4 rounded h-48 object-contain">
         <h3 class="text-lg font-semibold mb-2">Полотно вафельное отбеленное 140г.ширини 45см длина 60м</h3>
-        <p class="text-gray-600 text-sm mb-4 flex-grow">Качественное вафельное полотно для различных нужд.</p>
+        <div class="mb-4 flex-grow">
+    <p class="text-gray-600 text-sm product-description">Качественное вафельное полотно для различных нужд.</p>
+            <button class="read-more-btn">Читать далее</button>
+</div>
         
         <div class="price-section">
             <span class="text-xl font-bold block mb-1">3300 руб./рулон</span>
@@ -573,9 +611,23 @@
     document.addEventListener('DOMContentLoaded', function() {
         updateCart();
     });
+    // Read more functionality
+document.querySelectorAll('.read-more-btn').forEach(button => {
+    button.addEventListener('click', function() {
+        const description = this.previousElementSibling;
+        description.classList.toggle('expanded');
+        
+        if (description.classList.contains('expanded')) {
+            this.textContent = 'Свернуть';
+        } else {
+            this.textContent = 'Читать далее';
+        }
+    });
+});
 </script>
 </body>
 
 </html>
+
 
 
