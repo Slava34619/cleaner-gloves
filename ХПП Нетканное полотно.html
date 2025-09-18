@@ -181,6 +181,9 @@
         height: 120px;
         object-fit: contain;
     }
+	.read-more-btn {
+        font-size: 11px;
+    }
 }
 
 /* Для очень маленьких экранов */
@@ -202,6 +205,39 @@
     .product-card img {
         height: 100px;
     }
+	.read-more-btn {
+        font-size: 10px;
+    }
+}
+		/* Ограничение текста описания */
+.product-description {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Ограничиваем до 3 строк */
+    -webkit-box-orient: vertical;
+    line-height: 1.4;
+    max-height: 4.2em; /* 3 строки * 1.4 line-height */
+    transition: max-height 0.3s ease;
+}
+
+.product-description.expanded {
+    -webkit-line-clamp: unset;
+    max-height: none;
+}
+
+.read-more-btn {
+    color: #2563eb;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 4px 0;
+    text-align: left;
+    margin-top: 4px;
+}
+
+.read-more-btn:hover {
+    text-decoration: underline;
 }
     </style>
     
@@ -242,8 +278,10 @@
     <div class="product-content">
         <img src="images/Нетканное полотно ХПП.png" alt="Нетканное полотно ХПП" class="mb-4 rounded h-48 object-contain">
         <h3 class="text-lg font-semibold mb-2">Полотно ХПП холстопрошивное ПЛОТНОЕ светлое 0,75х50 м, 170(±10) г/м2, шаг 2,5 мм, LAIMA Стандарт</h3>
-        <p class="text-gray-600 text-sm mb-4 flex-grow">Холстопрошивное полотно применяется в клининговой сфере, в быту и на производстве. Его используют при обтирке станков и деталей, в химической промышленности. Также утепляют трубопроводы.</p>
-        
+        <div class="mb-4 flex-grow">
+    <p class="text-gray-600 text-sm product-description">Холстопрошивное полотно применяется в клининговой сфере, в быту и на производстве. Его используют при обтирке станков и деталей, в химической промышленности. Также утепляют трубопроводы.</p>
+        <button class="read-more-btn">Читать далее</button>
+</div>
         <div class="price-section">
             <span class="text-xl font-bold block mb-1">2550 руб./рул.</span>
             <div class="vat-info text-gray-500 text-xs mb-3">Включая НДС 20%</div>
@@ -610,10 +648,24 @@
     document.addEventListener('DOMContentLoaded', function() {
         updateCart();
     });
+	// Read more functionality
+document.querySelectorAll('.read-more-btn').forEach(button => {
+    button.addEventListener('click', function() {
+        const description = this.previousElementSibling;
+        description.classList.toggle('expanded');
+        
+        if (description.classList.contains('expanded')) {
+            this.textContent = 'Свернуть';
+        } else {
+            this.textContent = 'Читать далее';
+        }
+    });
+});
 </script>
 </body>
 
 </html>
+
 
 
 
