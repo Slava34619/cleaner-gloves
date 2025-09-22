@@ -342,7 +342,6 @@
         #cart-modal {
             -webkit-overflow-scrolling: touch;
         }
-
         /* Исправление для карусели в мобильной версии */
 @media (max-width: 768px) {
     .header-carousel-container {
@@ -350,12 +349,6 @@
         width: 100%;
         max-width: 100%;
         margin: 0 auto;
-        position: relative;
-    min-height: 250px;
-    overflow: hidden;
-    border-radius: 0.5rem;
-    background: white;
-        background-color: #f8f9fa; /* Светлый фон на случай, если изображение не загрузится */
     }
     
     .header-carousel-slide {
@@ -1218,69 +1211,62 @@
             orderForm.reset();
         });
 
-       // Карусель акций в шапке - исправленная версия
-let currentHeaderSlide = 0;
-const headerSlides = document.querySelectorAll('.header-carousel-slide');
-const headerIndicators = document.querySelectorAll('.header-carousel-indicator');
-const totalHeaderSlides = headerSlides.length;
+        // Карусель акций в шапке - исправленная версия
+        let currentHeaderSlide = 0;
+        const headerSlides = document.querySelectorAll('.header-carousel-slide');
+        const headerIndicators = document.querySelectorAll('.header-carousel-indicator');
+        const totalHeaderSlides = headerSlides.length;
 
-function showHeaderSlide(index) {
-    // Hide all slides
-    headerSlides.forEach(slide => {
-        slide.style.opacity = '0';
-        slide.style.zIndex = '1';
-    });
-    
-    headerIndicators.forEach(indicator => indicator.classList.remove('active'));
-    
-    // Show the selected slide
-    headerSlides[index].style.opacity = '1';
-    headerSlides[index].style.zIndex = '2';
-    
-    headerIndicators[index].classList.add('active');
-    currentHeaderSlide = index;
-}
-
-// Инициализация карусели
-function initCarousel() {
-    if (headerSlides.length > 0) {
-        // Устанавливаем начальные стили для всех слайдов
-        headerSlides.forEach(slide => {
-            slide.style.position = 'absolute';
-            slide.style.width = '100%';
-            slide.style.height = '100%';
-            slide.style.transition = 'opacity 0.6s ease';
-            slide.style.opacity = '0';
-        });
-        
-        showHeaderSlide(0);
-        
-        // Auto advance slides
-        setInterval(() => {
-            let nextSlide = (currentHeaderSlide + 1) % totalHeaderSlides;
-            showHeaderSlide(nextSlide);
-        }, 5000);
-        
-        // Next slide
-        document.querySelector('.header-carousel-control.next').addEventListener('click', function() {
-            let nextSlide = (currentHeaderSlide + 1) % totalHeaderSlides;
-            showHeaderSlide(nextSlide);
-        });
-        
-        // Previous slide
-        document.querySelector('.header-carousel-control.prev').addEventListener('click', function() {
-            let prevSlide = (currentHeaderSlide - 1 + totalHeaderSlides) % totalHeaderSlides;
-            showHeaderSlide(prevSlide);
-        });
-        
-        // Add click events to indicators
-        headerIndicators.forEach((indicator, index) => {
-            indicator.addEventListener('click', function() {
-                showHeaderSlide(index);
+        function showHeaderSlide(index) {
+            // Hide all slides
+            headerSlides.forEach(slide => {
+                slide.style.opacity = '0';
+                slide.style.display = 'none';
             });
-        });
-    }
-}
+            
+            headerIndicators.forEach(indicator => indicator.classList.remove('active'));
+            
+            // Show the selected slide
+            headerSlides[index].style.display = 'flex';
+            setTimeout(() => {
+                headerSlides[index].style.opacity = '1';
+            }, 50);
+            
+            headerIndicators[index].classList.add('active');
+            currentHeaderSlide = index;
+        }
+
+        // Инициализация карусели
+        function initCarousel() {
+            if (headerSlides.length > 0) {
+                showHeaderSlide(0);
+                
+                // Auto advance slides
+                setInterval(() => {
+                    let nextSlide = (currentHeaderSlide + 1) % totalHeaderSlides;
+                    showHeaderSlide(nextSlide);
+                }, 5000);
+                
+                // Next slide
+                document.querySelector('.header-carousel-control.next').addEventListener('click', function() {
+                    let nextSlide = (currentHeaderSlide + 1) % totalHeaderSlides;
+                    showHeaderSlide(nextSlide);
+                });
+                
+                // Previous slide
+                document.querySelector('.header-carousel-control.prev').addEventListener('click', function() {
+                    let prevSlide = (currentHeaderSlide - 1 + totalHeaderSlides) % totalHeaderSlides;
+                    showHeaderSlide(prevSlide);
+                });
+                
+                // Add click events to indicators
+                headerIndicators.forEach((indicator, index) => {
+                    indicator.addEventListener('click', function() {
+                        showHeaderSlide(index);
+                    });
+                });
+            }
+        }
 
         // Запуск после загрузки DOM
         document.addEventListener('DOMContentLoaded', function() {
@@ -1290,5 +1276,4 @@ function initCarousel() {
     </script>
 </body>
 </html>
-
 
