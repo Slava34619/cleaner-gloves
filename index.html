@@ -342,6 +342,27 @@
         #cart-modal {
             -webkit-overflow-scrolling: touch;
         }
+
+        @media (max-width: 768px) {
+        /* Этот стиль переопределит max-width для мобильных */
+        .header-carousel-container {
+            width: 100%; /* Карусель занимает всю доступную ширину */
+            max-width: 100%; /* Убираем ограничение в 600px */
+            /* Если хотите фиксированную высоту, оставьте ее здесь */
+            /* height: 250px; */ 
+        }
+
+        .header-carousel-slide {
+            /* Слайд также должен быть на всю ширину */
+            width: 100%; 
+        }
+
+        .header-carousel-slide img {
+            width: 100%; /* Изображение занимает всю ширину слайда */
+            height: auto; /* Высота подстраивается пропорционально */
+            object-fit: cover; /* Изображение заполняет весь контейнер, обрезая лишнее */
+        }
+    }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -1221,5 +1242,6 @@
     </script>
 </body>
 </html>
+
 
 
