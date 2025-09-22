@@ -342,6 +342,68 @@
         #cart-modal {
             -webkit-overflow-scrolling: touch;
         }
+
+        /* Исправление для карусели в мобильной версии */
+@media (max-width: 768px) {
+    .header-carousel-container {
+        height: 300px !important; /* Фиксированная высота */
+        width: 100%;
+        max-width: 100%;
+        margin: 0 auto;
+        position: relative;
+    min-height: 250px;
+    overflow: hidden;
+    border-radius: 0.5rem;
+    background: white;
+        background-color: #f8f9fa; /* Светлый фон на случай, если изображение не загрузится */
+    }
+    
+    .header-carousel-slide {
+        width: 100% !important;
+        height: 100% !important;
+    }
+    
+    .header-carousel-slide img {
+        max-width: 100%;
+        max-height: 200px; /* Ограничиваем высоту изображения */
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        margin: 0 auto;
+        display: block;
+    }
+    
+    .header-carousel-slide .absolute {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.7);
+        padding: 10px;
+        min-height: auto;
+    }
+    
+    .header-carousel-control {
+        width: 25px;
+        height: 25px;
+        font-size: 12px;
+    }
+}
+
+/* Гарантия одинаковых размеров для всех слайдов */
+.header-carousel-slide {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.header-carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
     </style>
 </head>
 <body class="bg-gray-50">
@@ -1156,62 +1218,69 @@
             orderForm.reset();
         });
 
-        // Карусель акций в шапке - исправленная версия
-        let currentHeaderSlide = 0;
-        const headerSlides = document.querySelectorAll('.header-carousel-slide');
-        const headerIndicators = document.querySelectorAll('.header-carousel-indicator');
-        const totalHeaderSlides = headerSlides.length;
+       // Карусель акций в шапке - исправленная версия
+let currentHeaderSlide = 0;
+const headerSlides = document.querySelectorAll('.header-carousel-slide');
+const headerIndicators = document.querySelectorAll('.header-carousel-indicator');
+const totalHeaderSlides = headerSlides.length;
 
-        function showHeaderSlide(index) {
-            // Hide all slides
-            headerSlides.forEach(slide => {
-                slide.style.opacity = '0';
-                slide.style.display = 'none';
+function showHeaderSlide(index) {
+    // Hide all slides
+    headerSlides.forEach(slide => {
+        slide.style.opacity = '0';
+        slide.style.zIndex = '1';
+    });
+    
+    headerIndicators.forEach(indicator => indicator.classList.remove('active'));
+    
+    // Show the selected slide
+    headerSlides[index].style.opacity = '1';
+    headerSlides[index].style.zIndex = '2';
+    
+    headerIndicators[index].classList.add('active');
+    currentHeaderSlide = index;
+}
+
+// Инициализация карусели
+function initCarousel() {
+    if (headerSlides.length > 0) {
+        // Устанавливаем начальные стили для всех слайдов
+        headerSlides.forEach(slide => {
+            slide.style.position = 'absolute';
+            slide.style.width = '100%';
+            slide.style.height = '100%';
+            slide.style.transition = 'opacity 0.6s ease';
+            slide.style.opacity = '0';
+        });
+        
+        showHeaderSlide(0);
+        
+        // Auto advance slides
+        setInterval(() => {
+            let nextSlide = (currentHeaderSlide + 1) % totalHeaderSlides;
+            showHeaderSlide(nextSlide);
+        }, 5000);
+        
+        // Next slide
+        document.querySelector('.header-carousel-control.next').addEventListener('click', function() {
+            let nextSlide = (currentHeaderSlide + 1) % totalHeaderSlides;
+            showHeaderSlide(nextSlide);
+        });
+        
+        // Previous slide
+        document.querySelector('.header-carousel-control.prev').addEventListener('click', function() {
+            let prevSlide = (currentHeaderSlide - 1 + totalHeaderSlides) % totalHeaderSlides;
+            showHeaderSlide(prevSlide);
+        });
+        
+        // Add click events to indicators
+        headerIndicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', function() {
+                showHeaderSlide(index);
             });
-            
-            headerIndicators.forEach(indicator => indicator.classList.remove('active'));
-            
-            // Show the selected slide
-            headerSlides[index].style.display = 'flex';
-            setTimeout(() => {
-                headerSlides[index].style.opacity = '1';
-            }, 50);
-            
-            headerIndicators[index].classList.add('active');
-            currentHeaderSlide = index;
-        }
-
-        // Инициализация карусели
-        function initCarousel() {
-            if (headerSlides.length > 0) {
-                showHeaderSlide(0);
-                
-                // Auto advance slides
-                setInterval(() => {
-                    let nextSlide = (currentHeaderSlide + 1) % totalHeaderSlides;
-                    showHeaderSlide(nextSlide);
-                }, 5000);
-                
-                // Next slide
-                document.querySelector('.header-carousel-control.next').addEventListener('click', function() {
-                    let nextSlide = (currentHeaderSlide + 1) % totalHeaderSlides;
-                    showHeaderSlide(nextSlide);
-                });
-                
-                // Previous slide
-                document.querySelector('.header-carousel-control.prev').addEventListener('click', function() {
-                    let prevSlide = (currentHeaderSlide - 1 + totalHeaderSlides) % totalHeaderSlides;
-                    showHeaderSlide(prevSlide);
-                });
-                
-                // Add click events to indicators
-                headerIndicators.forEach((indicator, index) => {
-                    indicator.addEventListener('click', function() {
-                        showHeaderSlide(index);
-                    });
-                });
-            }
-        }
+        });
+    }
+}
 
         // Запуск после загрузки DOM
         document.addEventListener('DOMContentLoaded', function() {
@@ -1221,4 +1290,5 @@
     </script>
 </body>
 </html>
+
 
