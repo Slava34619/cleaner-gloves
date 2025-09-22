@@ -343,20 +343,49 @@
             -webkit-overflow-scrolling: touch;
         }
 
-        @media (max-width: 768px) {
-    .header-carousel-container {
-        height: 250px; /* Можно оставить это значение, чтобы сохранить высоту */
-        min-height: 250px;
-    }
-}
+        /* Медиа-запрос для мобильных устройств */
+    @media (max-width: 768px) {
+        .header-carousel-container {
+            height: 250px; /* Фиксированная высота только для мобильных */
+            min-height: 250px;
+        }
+
+        .header-carousel-slide {
+            height: 100%;
+        }
 
         .header-carousel-slide img {
-    height: 100%; /* Устанавливаем 100% высоты от контейнера */
-    width: auto;
-    max-width: 100%;
-    object-fit: contain; /* Сохраняет пропорции, чтобы изображение умещалось */
-    display: block; /* Убирает лишний пробел */
-}
+            height: 100%;
+            width: auto;
+            max-width: 100%;
+            object-fit: contain;
+        }
+        
+        /* Проверьте, что в этом блоке нет других конфликтующих стилей */
+        .header-carousel-slide .absolute {
+            padding: 10px;
+            min-height: 45%;
+        }
+        
+        .header-carousel-slide h3 {
+            font-size: 14px;
+        }
+        
+        .header-carousel-slide p {
+            font-size: 12px;
+        }
+        
+        .header-carousel-slide .text-2xl {
+            font-size: 18px;
+        }
+    }
+
+    /* Стили для десктопной версии остаются без изменений */
+    .header-carousel-container {
+        /* Высота и другие стили для больших экранов */
+        height: 250px;
+        min-height: 250px;
+    }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -1236,5 +1265,4 @@
     </script>
 </body>
 </html>
-
 
