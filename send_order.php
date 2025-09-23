@@ -33,8 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $orderText .= "\nДата: " . date('d.m.Y H:i:s');
 
     // Настройки
-    $telegramToken = 'YOUR_BOT_TOKEN'; // Замените на токен вашего бота
-    $telegramChatId = 'YOUR_CHAT_ID'; // Замените на ваш chat_id
+    $telegramToken = '8114103931:AAEDUG1UESqUPqLYIsFe78STajbippIM8Gg'; // Замените на токен вашего бота
+    $telegramChatId = '7065672537'; // Замените на ваш chat_id
     $emailTo = 'snabpromgroup@mail.ru'; // Ваша почта
 
     // Отправка в Telegram
@@ -91,4 +91,5 @@ function sendToEmail($to, $text, $name, $fromEmail) {
     
     return mail($to, $subject, $text, $headers);
 }
+
 ?>
