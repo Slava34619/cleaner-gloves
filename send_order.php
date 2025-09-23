@@ -8,10 +8,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $input = json_decode(file_get_contents('php://input'), true);
     
     // Данные заказа
-    $name = $input['name'] ?? '';
-    $email = $input['email'] ?? '';
-    $phone = $input['phone'] ?? '';
-    $comment = $input['comment'] ?? '';
+    $name = $input['customer']['name'] ?? '';
+    $email = $input['customer']['email'] ?? '';
+    $phone = $input['customer']['phone'] ?? '';
+    $comment = $input['customer']['comment'] ?? '';
     $items = $input['items'] ?? [];
     
     // Формируем текст заказа
@@ -32,10 +32,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $orderText .= "\nИТОГО: {$total} руб.\n";
     $orderText .= "\nДата: " . date('d.m.Y H:i:s');
 
-    // Настройки
-    $telegramToken = '8114103931:AAEDUG1UESqUPqLYIsFe78STajbippIM8Gg'; // Замените на токен вашего бота
-    $telegramChatId = '7065672537'; // Замените на ваш chat_id
-    $emailTo = 'snabpromgroup@mail.ru'; // Ваша почта
+    // Настройки (замените на реальные значения)
+    $telegramToken = '8114103931:AAEDUG1UESqUPqLYIsFe78STajbippIM8Gg';
+    $telegramChatId = '7065672537';
+    $emailTo = 'snabpromgroup@mail.ru';
 
     // Отправка в Telegram
     $telegramSent = sendToTelegram($telegramToken, $telegramChatId, $orderText);
@@ -59,17 +59,7 @@ function sendToTelegram($token, $chatId, $text) {
         'text' => $text,
         'parse_mode' => 'HTML'
     ];
-    if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
-    $filePath = $_FILES['file']['tmp_name'];
-    $fileName = $_FILES['file']['name'];
     
-    // Отправка файла в Telegram
-    $url = "https://api.telegram.org/bot{$token}/sendDocument";
-    $data = [
-        'chat_id' => $chatId,
-        'document' => new CURLFile($filePath, mime_content_type($filePath), $fileName),
-        'caption' => $text
-    ];
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_POST, true);
@@ -91,5 +81,4 @@ function sendToEmail($to, $text, $name, $fromEmail) {
     
     return mail($to, $subject, $text, $headers);
 }
-
 ?>
