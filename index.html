@@ -1127,25 +1127,62 @@
         });
 
         // Order form submission
-        orderForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Here you would normally send the order to your server
-            const formData = new FormData(this);
-            const orderData = {
-                items: cart,
-                customer: {
-                    name: formData.get('name'),
-                    email: formData.get('email'),
-                    phone: formData.get('phone'),
-                    comment: formData.get('comment')
-                }
-            };
-            
-            console.log('Order submitted:', orderData);
-            
-            // Show success message
+orderForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const orderData = {
+        items: cart,
+        customer: {
+            name: formData.get('name'),
+            email: formData.get('email'),
+            phone: formData.get('phone'),
+            comment: formData.get('comment')
+        }
+    };
+    
+    try {
+        // Показываем индикатор загрузки
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Отправка...';
+        submitBtn.disabled = true;
+        
+        // Отправка на сервер
+        const response = await fetch('send_order.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(orderData)
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
             showNotification('Заказ успешно отправлен! Мы свяжемся с вами в ближайшее время.');
+            
+            // Reset cart and close modal
+            cart = [];
+            updateCart();
+            checkoutForm.classList.add('hidden');
+            cartModal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            orderForm.reset();
+        } else {
+            showNotification('Ошибка отправки заказа. Пожалуйста, попробуйте еще раз или свяжитесь с нами по телефону.');
+        }
+        
+    } catch (error) {
+        console.error('Error:', error);
+        showNotification('Ошибка сети. Пожалуйста, свяжитесь с нами по телефону.');
+    } finally {
+        // Восстанавливаем кнопку
+        const submitBtn = orderForm.querySelector('button[type="submit"]');
+        submitBtn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> Отправить заказ';
+        submitBtn.disabled = false;
+    }
+});
             
             // Reset cart and close modal
             cart = [];
